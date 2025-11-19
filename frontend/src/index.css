@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --bg: #0b0e15;
+}
+
+html, body, #root{ height: 100%; }
+body{ background: var(--bg); color: #e5e7eb; }
+
+/***** Weather Effects *****/
+/* Fog overlay: animated moving noise + radial mouse reveal handled in JS */
+.fog-layer{
+  position: fixed; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.08) 30%, rgba(0,0,0,0.4) 100%),
+              url('https://images.unsplash.com/photo-1629380321590-3b3f75d66dec?ixid=M3w3OTkxMTl8MHwxfHNlYXJjaHwxfHxjZXJhbWljJTIwcG90dGVyeSUyMGhhbmRtYWRlfGVufDB8MHx8fDE3NjM1MTI1ODN8MA&ixlib=rb-4.1.0&w=1600&auto=format&fit=crop&q=80');
+  background-size: cover, 600px 600px;
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  animation: fogMove 30s linear infinite;
+  filter: blur(2px) saturate(0.9);
+}
+.fog-mask{
+  position: fixed; inset: 0; pointer-events: none;
+  -webkit-mask-image: radial-gradient(120px 120px at var(--mx,50%) var(--my,50%), black 0%, transparent 60%);
+  mask-image: radial-gradient(120px 120px at var(--mx,50%) var(--my,50%), black 0%, transparent 60%);
+}
+@keyframes fogMove{
+  0%{ background-position: 0 0, 0 0; }
+  50%{ background-position: 20% 10%, 300px 300px; }
+  100%{ background-position: 0 0, 600px 600px; }
+}
+
+/* Rain: falling drops using repeated linear-gradient */
+.rain-layer{
+  position: fixed; inset: 0; pointer-events: none; overflow: hidden;
+  background-image: linear-gradient(rgba(255,255,255,0.35) 0 2px, transparent 2px 100%),
+                    linear-gradient(rgba(255,255,255,0.15) 0 1px, transparent 1px 100%);
+  background-size: 2px 30px, 1px 20px;
+  background-repeat: repeat;
+  animation: rainFall 600ms linear infinite;
+  opacity: 0.2;
+}
+@keyframes rainFall{
+  from{ background-position: 0 -30px, 0 -20px; }
+  to{ background-position: 0 0, 0 0; }
+}
+
+/* Wind: subtle shake animation on cards */
+.wind-wobble{
+  animation: wind 3s ease-in-out infinite;
+}
+@keyframes wind{
+  0%{ transform: translateY(0) rotate(0deg); }
+  25%{ transform: translateY(-1px) rotate(-0.3deg); }
+  50%{ transform: translateY(0.5px) rotate(0.2deg); }
+  75%{ transform: translateY(-0.5px) rotate(-0.2deg); }
+  100%{ transform: translateY(0) rotate(0deg); }
+}
+
+/* Warm/Cold themes */
+.theme-warm{ --accent: 255 99 71; --bg-grad-from: 88 18 18; --bg-grad-to: 18 8 8; }
+.theme-cold{ --accent: 56 189 248; --bg-grad-from: 10 22 40; --bg-grad-to: 6 10 20; }
+.theme-neutral{ --accent: 168 85 247; --bg-grad-from: 12 10 30; --bg-grad-to: 6 8 16; }
+
+.app-bg{
+  background: radial-gradient(circle at 20% 0%, rgba(var(--accent)/0.2), transparent 40%),
+              linear-gradient(180deg, rgb(var(--bg-grad-from)) 0%, rgb(var(--bg-grad-to)) 100%);
+}
+
+.glass{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  backdrop-filter: blur(10px) saturate(120%);
+}
